@@ -1,0 +1,28 @@
+options {Ignore_Case = false;}
+PARSER_BEGIN(Analyzer)
+
+public class Analyzer{
+	public static void main (String args[]) throws ParseException{
+	Analyzer miniJavaAnalizer=new Analyzer(System.in);
+	miniJavaAnalizer.analyzingInput();
+	
+	}
+}
+
+PARSER_END(Analyzer)
+
+SKIP:{" " | "\n" | "\t" | "\r"}
+
+TOKEN: {
+<aToken: "a">
+{System.out.println("Funciona");} 
+}
+
+
+SKIP: {<~[]>}
+
+
+void analyzingInput():{}
+{
+(<aToken>) + <EOF>
+}
