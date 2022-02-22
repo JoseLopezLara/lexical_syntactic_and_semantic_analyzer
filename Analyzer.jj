@@ -14,15 +14,200 @@ PARSER_END(Analyzer)
 SKIP:{" " | "\n" | "\t" | "\r"}
 
 TOKEN: {
-<aToken: "a">
-{System.out.println("Funciona");} 
+<classToken: "class">
+{System.out.println("Palabra reservada class");} 
 }
 
+TOKEN: {
+<publicToken: "public">
+{System.out.println("Palabra reservada public");} 
+}
+
+TOKEN: {
+<staticToken: "static">
+{System.out.println("Palabra reservada static");} 
+}
+
+TOKEN: {
+<voidToken: "void">
+{System.out.println("Palabra reservada void");} 
+}
+
+TOKEN: {
+<mainToken: "main">
+{System.out.println("Palabra reservada main");}
+}
+
+
+TOKEN: {
+<stringToken: "String">
+{System.out.println("Palabra reservada String");} 
+} 
+
+TOKEN: {
+<returnToken: "return">
+{System.out.println("Palabra reservada return");} 
+}
+
+TOKEN: {
+<extendsToken: "extends">
+{System.out.println("Palabra reservada extends");} 
+}
+
+TOKEN: {
+<intToken: "int">
+{System.out.println("Palabra reservada int");} 
+}
+
+TOKEN: {
+<booleanToken: "boolean">
+{System.out.println("Palabra reservada boolean");} 
+}
+
+TOKEN: {
+<floatToken: "float">
+{System.out.println("Palabra reservada float");} 
+}
+
+TOKEN: {
+<ifToken: "if">
+{System.out.println("Palabra reservada  if");} 
+}
+
+TOKEN: {
+<elseToken: "else">
+{System.out.println("Palabra reservada else");} 
+}
+
+TOKEN: {
+<whileToken: "while">
+{System.out.println("Palabra reservada while");} 
+}
+
+TOKEN: {
+<trueToken: "true">
+{System.out.println("Palabra reservada true");} 
+}
+
+TOKEN: {
+<falseToken: "false">
+{System.out.println("Palabra reservada false");} 
+}
+
+TOKEN: {
+<thisToken: "this">
+{System.out.println("Palabra reservada this");} 
+}
+
+TOKEN: {
+<newToken: "new">
+{System.out.println("Palabra reservada new");} 
+}
+
+TOKEN: {
+<soutToken: "System.out.println">
+{System.out.println("Palabra reservada System.out.println");} 
+}
+
+TOKEN: {
+<openedBraceToken: "[">
+{System.out.println("Agrupamiento [");} 
+}
+
+TOKEN: {
+<closedBraceToken: "]">
+{System.out.println("Agrupamiento ]");} 
+}
+
+TOKEN: {
+<openedParenthesisToken: "(">
+{System.out.println("Agrupamiento (");} 
+}
+
+TOKEN: {
+<closedParenthesisToken: ")">
+{System.out.println("Agrupamiento )");} 
+}
+
+TOKEN: {
+<openedCurlyBracketsToken: "{">
+{System.out.println("Agrupamiento {");} 
+}
+
+TOKEN: {
+<closedCurlyBracketsToken: "}">
+{System.out.println("Agrupamiento }");} 
+}
+
+TOKEN: {
+<andToken: "&&">
+{System.out.println("Operador &&");} 
+}
+
+TOKEN: {
+<orToken: "|">
+{System.out.println("Operador |");} 
+}
+
+TOKEN: {
+<lessThanToken: "<">
+{System.out.println("Operador <");} 
+}
+
+TOKEN: {
+<moreThanToken: ">">
+{System.out.println("Operador >");} 
+}
+
+TOKEN: {
+<lessOrEqualThanToken: "<=">
+{System.out.println("Operador <=");} 
+}
+
+TOKEN: {
+<moreOrEqualThanToken: ">=">
+{System.out.println("Operador >=");} 
+}
+
+TOKEN: {
+<plusToken: "+">
+{System.out.println("Operador +");} 
+}
+
+TOKEN: {
+<minusToken: "-">
+{System.out.println("Operador -");} 
+}
+
+TOKEN: {
+<multiplicationToken: "*">
+{System.out.println("Operador *");} 
+}
+
+TOKEN: {
+<divisionToken: "/">
+{System.out.println("Operador /");} 
+}
+
+TOKEN: {
+<dotToken: ".">
+{System.out.println("Operador .");} 
+}
+
+TOKEN: {
+<notToken: "!">
+{System.out.println("Operador !");} 
+}
 
 SKIP: {<~[]>}
 
 
 void analyzingInput():{}
 {
-(<aToken>) + <EOF>
+(<classToken> | <publicToken> | <staticToken> | <voidToken> | <mainToken> | <stringToken> | <returnToken> | <extendsToken> | <intToken> |
+<booleanToken> | <floatToken> | <ifToken> | <elseToken> | <whileToken> | <trueToken> | <falseToken> | <thisToken> | <newToken> | <soutToken>
+| <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken>
+| <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
+| <divisionToken> | <dotToken> | <notToken>
+) + <EOF>
 }
