@@ -1,0 +1,107 @@
+Operador /
+Operador *
+Identificador: Programa
+Identificador: de
+Identificador: Ejemplo
+Identificador: en
+Identificador: Minijava
+Operador *
+Operador /
+Palabra reservada class
+Identificador: Factorial
+Agrupamiento {
+Palabra reservada public
+Palabra reservada static
+Palabra reservada void
+Palabra reservada main
+Agrupamiento (
+Palabra reservada String
+Agrupamiento [
+Agrupamiento ]
+Identificador: a
+Agrupamiento )
+Agrupamiento {
+Palabra reservada System.out.println
+Agrupamiento (
+Palabra reservada new
+Identificador: Fac
+Agrupamiento (
+Agrupamiento )
+Operador .
+Identificador: ComputeFac
+Agrupamiento (
+ERROR (Simbolo no identificado): 1 , en la linea: 6
+ERROR (Simbolo no identificado): 0 , en la linea: 6
+Agrupamiento )
+Agrupamiento )
+Agrupamiento ;
+Agrupamiento }
+Agrupamiento }
+Palabra reservada class
+Identificador: Fac
+Agrupamiento {
+Palabra reservada public
+Palabra reservada int
+Identificador: ComputeFac
+Agrupamiento (
+Palabra reservada int
+Identificador: num
+Agrupamiento )
+Agrupamiento {
+Palabra reservada int
+Identificador: num_aux
+Agrupamiento ;
+Palabra reservada int
+Identificador: aB_2_h
+Agrupamiento ;
+Palabra reservada int
+ERROR (Simbolo no identificado): _ , en la linea: 14
+Identificador: aA
+Agrupamiento ;
+Palabra reservada int
+Identificador: aA
+ERROR (Simbolo no identificado): & , en la linea: 15
+Agrupamiento ;
+Palabra reservada int
+Identificador: a___
+Agrupamiento ;
+Palabra reservada int
+Identificador: d_a_s
+Agrupamiento ;
+Palabra reservada  if
+Agrupamiento (
+Identificador: num
+Operador <
+ERROR (Simbolo no identificado): 1 , en la linea: 19
+Agrupamiento )
+Identificador: num_aux
+Operador =
+ERROR (Simbolo no identificado): 1 , en la linea: 19
+Agrupamiento ;
+Palabra reservada else
+Identificador: num_aux
+Operador =
+Identificador: num
+Operador *
+Agrupamiento (
+Palabra reservada this
+Operador .
+Identificador: ComputeFac
+Agrupamiento (
+Identificador: num
+Operador -
+ERROR (Simbolo no identificado): 1 , en la linea: 20
+Agrupamiento )
+Agrupamiento )
+Agrupamiento ;
+Palabra reservada return
+Identificador: num_aux
+Agrupamiento ;
+Agrupamiento }
+Agrupamiento }
+ERROR (Simbolo no identificado): 0 , en la linea: 25
+Constante real 0.2
+Constante real 0.2
+Constante real 1.112312
+Constante real 999.22
+Constante real 2.0

@@ -2,176 +2,193 @@ options {Ignore_Case = false;}
 PARSER_BEGIN(Analyzer)
 
 public class Analyzer{
-	public static void main (String args[]) throws ParseException{
-	Analyzer miniJavaAnalizer=new Analyzer(System.in);
-	miniJavaAnalizer.analyzingInput();
-	
-	}
+    public static void main (String args[]) throws ParseException{
+        Analyzer miniJavaAnalizer=new Analyzer(System.in);
+        miniJavaAnalizer.analyzingInput();
+    }
 }
 
 PARSER_END(Analyzer)
 
 SKIP:{" " | "\n" | "\t" | "\r"}
 
+//Tokens
+//----------------------------------------------------
+//Reserved words
+//----------------------------------------------------
 TOKEN: {
-<classToken: "class">
-{System.out.println("Palabra reservada class");} 
+    <classToken: "class">
+    {System.out.println("Palabra reservada class");} 
 }
 
 TOKEN: {
-<publicToken: "public">
-{System.out.println("Palabra reservada public");} 
+    <publicToken: "public">
+    {System.out.println("Palabra reservada public");} 
 }
 
 TOKEN: {
-<staticToken: "static">
-{System.out.println("Palabra reservada static");} 
+    <staticToken: "static">
+    {System.out.println("Palabra reservada static");} 
 }
 
 TOKEN: {
-<voidToken: "void">
-{System.out.println("Palabra reservada void");} 
+    <voidToken: "void">
+    {System.out.println("Palabra reservada void");} 
 }
 
 TOKEN: {
-<mainToken: "main">
-{System.out.println("Palabra reservada main");}
+    <mainToken: "main">
+    {System.out.println("Palabra reservada main");}
 }
 
 
 TOKEN: {
-<stringToken: "String">
-{System.out.println("Palabra reservada String");} 
+    <stringToken: "String">
+    {System.out.println("Palabra reservada String");} 
 } 
 
 TOKEN: {
-<returnToken: "return">
-{System.out.println("Palabra reservada return");} 
+    <returnToken: "return">
+    {System.out.println("Palabra reservada return");} 
 }
 
 TOKEN: {
-<extendsToken: "extends">
-{System.out.println("Palabra reservada extends");} 
+    <extendsToken: "extends">
+    {System.out.println("Palabra reservada extends");} 
 }
 
 TOKEN: {
-<intToken: "int">
-{System.out.println("Palabra reservada int");} 
+    <intToken: "int">
+    {System.out.println("Palabra reservada int");} 
 }
 
 TOKEN: {
-<booleanToken: "boolean">
-{System.out.println("Palabra reservada boolean");} 
+    <booleanToken: "boolean">
+    {System.out.println("Palabra reservada boolean");} 
 }
 
 TOKEN: {
-<floatToken: "float">
-{System.out.println("Palabra reservada float");} 
+    <floatToken: "float">
+    {System.out.println("Palabra reservada float");} 
 }
 
 TOKEN: {
-<ifToken: "if">
-{System.out.println("Palabra reservada  if");} 
+    <ifToken: "if">
+    {System.out.println("Palabra reservada  if");} 
 }
 
 TOKEN: {
-<elseToken: "else">
-{System.out.println("Palabra reservada else");} 
+    <elseToken: "else">
+    {System.out.println("Palabra reservada else");} 
 }
 
 TOKEN: {
-<whileToken: "while">
-{System.out.println("Palabra reservada while");} 
+    <whileToken: "while">
+    {System.out.println("Palabra reservada while");} 
 }
 
 TOKEN: {
-<trueToken: "true">
-{System.out.println("Palabra reservada true");} 
+    <trueToken: "true">
+    {System.out.println("Palabra reservada true");} 
 }
 
 TOKEN: {
-<falseToken: "false">
-{System.out.println("Palabra reservada false");} 
+    <falseToken: "false">
+    {System.out.println("Palabra reservada false");} 
 }
 
 TOKEN: {
-<thisToken: "this">
-{System.out.println("Palabra reservada this");} 
+    <thisToken: "this">
+    {System.out.println("Palabra reservada this");} 
 }
 
 TOKEN: {
-<newToken: "new">
-{System.out.println("Palabra reservada new");} 
+    <newToken: "new">
+    {System.out.println("Palabra reservada new");} 
 }
 
 TOKEN: {
-<soutToken: "System.out.println">
-{System.out.println("Palabra reservada System.out.println");} 
+    <soutToken: "System.out.println">
+    {System.out.println("Palabra reservada System.out.println");} 
+}
+
+//Grouping symbols
+//----------------------------------------------------
+TOKEN: {
+    <openedBraceToken: "[">
+    {System.out.println("Agrupamiento [");} 
 }
 
 TOKEN: {
-<openedBraceToken: "[">
-{System.out.println("Agrupamiento [");} 
+    <closedBraceToken: "]">
+    {System.out.println("Agrupamiento ]");} 
 }
 
 TOKEN: {
-<closedBraceToken: "]">
-{System.out.println("Agrupamiento ]");} 
+    <openedParenthesisToken: "(">
+    {System.out.println("Agrupamiento (");} 
 }
 
 TOKEN: {
-<openedParenthesisToken: "(">
-{System.out.println("Agrupamiento (");} 
+    <closedParenthesisToken: ")">
+    {System.out.println("Agrupamiento )");} 
 }
 
 TOKEN: {
-<closedParenthesisToken: ")">
-{System.out.println("Agrupamiento )");} 
+    <openedCurlyBracketsToken: "{">
+    {System.out.println("Agrupamiento {");} 
 }
 
 TOKEN: {
-<openedCurlyBracketsToken: "{">
-{System.out.println("Agrupamiento {");} 
+    <closedCurlyBracketsToken: "}">
+    {System.out.println("Agrupamiento }");} 
 }
 
 TOKEN: {
-<closedCurlyBracketsToken: "}">
-{System.out.println("Agrupamiento }");} 
+    <semiColonToken: ";">
+    {System.out.println("Agrupamiento ;");}
+}
+
+//Operator symbols
+//----------------------------------------------------
+TOKEN: {
+    <equalsToken: "=">
+    {System.out.println("Operador =");} 
 }
 
 TOKEN: {
-<andToken: "&&">
-{System.out.println("Operador &&");} 
+    <andToken: "&&">
+    {System.out.println("Operador &&");} 
 }
 
 TOKEN: {
-<orToken: "|">
-{System.out.println("Operador |");} 
+    <orToken: "|">
+    {System.out.println("Operador |");} 
 }
 
 TOKEN: {
-<lessThanToken: "<">
-{System.out.println("Operador <");} 
+    <lessThanToken: "<">
+    {System.out.println("Operador <");} 
 }
 
 TOKEN: {
-<moreThanToken: ">">
-{System.out.println("Operador >");} 
+    <moreThanToken: ">">
+    {System.out.println("Operador >");} 
 }
 
 TOKEN: {
-<lessOrEqualThanToken: "<=">
-{System.out.println("Operador <=");} 
+    <lessOrEqualThanToken: "<=">
+    {System.out.println("Operador <=");} 
 }
 
 TOKEN: {
-<moreOrEqualThanToken: ">=">
-{System.out.println("Operador >=");} 
+    <moreOrEqualThanToken: ">=">
+    {System.out.println("Operador >=");} 
 }
 
 TOKEN: {
-<plusToken: "+">
-{System.out.println("Operador +");} 
+    <plusToken: "+">
+    {System.out.println("Operador +");} 
 }
 
 TOKEN: {
@@ -180,8 +197,8 @@ TOKEN: {
 }
 
 TOKEN: {
-<multiplicationToken: "*">
-{System.out.println("Operador *");} 
+    <multiplicationToken: "*">
+    {System.out.println("Operador *");} 
 }
 
 TOKEN: {
@@ -190,24 +207,47 @@ TOKEN: {
 }
 
 TOKEN: {
-<dotToken: ".">
-{System.out.println("Operador .");} 
+    <dotToken: ".">
+    {System.out.println("Operador .");} 
 }
 
 TOKEN: {
-<notToken: "!">
-{System.out.println("Operador !");} 
+    <notToken: "!">
+    {System.out.println("Operador !");} 
 }
 
-SKIP: {<~[]>}
+TOKEN: {
+    <idToken: ((["a"-"z"]) | (["A"-"Z"]))
+    ((["0"-"9"]){0,} | ("_"){0,} | (["a"-"z"]){0,} | (["A"-"Z"]){0,}){0,}>
+    {System.out.println("Identificador: " + image);} 
+}
+
+//Real constants
+//------------------------------------
+TOKEN:{
+    <realConstToken: (["0"-"9"] | (["1"-"9"](["0"-"9"]){0,10}))"."(["0"-"9"]){1,11}>
+    {System.out.println("Constante real " + image);}
+}
+
+//Errors
+//------------------------------------
+SPECIAL_TOKEN: {
+    <errorSymbNotIdent: ~[] >
+    {System.out.println("ERROR (Simbolo no identificado): " 
+    + image + 
+    " , en la linea: " + matchedToken.beginLine);}
+}
+
+
+
 
 
 void analyzingInput():{}
 {
 (<classToken> | <publicToken> | <staticToken> | <voidToken> | <mainToken> | <stringToken> | <returnToken> | <extendsToken> | <intToken> |
 <booleanToken> | <floatToken> | <ifToken> | <elseToken> | <whileToken> | <trueToken> | <falseToken> | <thisToken> | <newToken> | <soutToken>
-| <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken>
-| <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
-| <divisionToken> | <dotToken> | <notToken>
+| <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken> | <semiColonToken> | <equalsToken>
+| <realConstToken> | <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
+| <divisionToken> | <dotToken> | <notToken> | <idToken>
 ) + <EOF>
 }
