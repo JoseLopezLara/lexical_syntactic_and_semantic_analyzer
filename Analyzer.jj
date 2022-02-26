@@ -229,15 +229,60 @@ TOKEN:{
     {System.out.println("Constante real " + image);}
 }
 
+
 //Errors
 //------------------------------------
+
+
+/*this token catches wrong float numbers which follow the pattern: n (enters). 
+ 0 or more enters
+ n is a number up to 11 digits
+*/
+SPECIAL_TOKEN:{
+<floatWithoutAnythingAfterPoint:(["0"-"9"] | (["1"-"9"](["0"-"9"]){0,10}))(" ")*".">
+{System.out.println("Error en la linea: " + matchedToken.beginLine + ", debido a un numero flotante mal construido: " + image );}
+}
+
+/*this token catches wrong float numbers which follow the pattern: . (enters) n
+ 0 or more enters
+ n is a number up to 11 digits
+*/
+
+SPECIAL_TOKEN:{
+<floatWithoutAnythingBeforePoint: "." (" ")* (["0"-"9"]){1,11}>
+{System.out.println("Error en la linea: " + matchedToken.beginLine + ", debido a un numero flotante mal construido: " + image );}
+}
+
+/*this token catches wrong float numbers which follow the pattern: n (enters). (enters) n 
+ n is a number up to 11 digits
+*/
+SPECIAL_TOKEN:{
+<floatWithEntersBetweenDigits: (["0"-"9"] | (["1"-"9"](["0"-"9"]){0,10}))(" ")*"."(" ")*(["0"-"9"]){1,11}>
+{System.out.println("Error en la linea: " + matchedToken.beginLine + ", debido a un numero flotante mal construido: " + image );}
+}
+
+/*this token catches wrong id's which starts with numbers instead of letters*/
+SPECIAL_TOKEN:{
+<iDStartsWithNumber: (["0"-"9"]){0,} <idToken>>
+{System.out.println("Error en la linea: " + matchedToken.beginLine + ", el identificador " + image + " no debe inciar con un número");}
+}
+
+
+SPECIAL_TOKEN:{
+<iDContainsSpaces: 
+((["a"-"z"]) | (["A"-"Z"]))(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,} | 
+((["a"-"z"]) | (["A"-"Z"]))(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,}(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,}
+>
+{System.out.println("Error en la linea: " + matchedToken.beginLine + ", el identificador " + image + " no debe haber espacios en los identificadores");}
+}
+
+
 SPECIAL_TOKEN: {
     <errorSymbNotIdent: ~[] >
     {System.out.println("ERROR (Simbolo no identificado): " 
     + image + 
     " , en la linea: " + matchedToken.beginLine);}
 }
-
 
 
 
