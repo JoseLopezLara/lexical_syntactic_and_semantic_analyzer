@@ -12,6 +12,20 @@ PARSER_END(Analyzer)
 
 SKIP:{" " | "\n" | "\t" | "\r"}
 
+SKIP :{< "//" (~["\r", "\n"])* >}
+
+SKIP:{ < "/*" > : mlComment}
+
+<mlComment>SKIP :
+{
+  < "*/" > : DEFAULT
+}
+
+<mlComment> MORE:
+{
+  <~[]>
+}
+
 //Tokens
 //----------------------------------------------------
 //Reserved words
@@ -229,6 +243,12 @@ TOKEN:{
     {System.out.println("Constante real " + image);}
 }
 
+//Real ints
+//------------------------------------
+TOKEN:{
+    <intConstToken: (["0"-"9"] | (["1"-"9"](["0"-"9"])+))>
+    {System.out.println("Constante entera " + image);}
+}
 
 //Errors
 //------------------------------------
@@ -292,7 +312,7 @@ void analyzingInput():{}
 (<classToken> | <publicToken> | <staticToken> | <voidToken> | <mainToken> | <stringToken> | <returnToken> | <extendsToken> | <intToken> |
 <booleanToken> | <floatToken> | <ifToken> | <elseToken> | <whileToken> | <trueToken> | <falseToken> | <thisToken> | <newToken> | <soutToken>
 | <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken> | <semiColonToken> | <equalsToken>
-| <realConstToken> | <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
+| <realConstToken> | <intConstToken> | <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
 | <divisionToken> | <dotToken> | <notToken> | <idToken>
 ) + <EOF>
 }
