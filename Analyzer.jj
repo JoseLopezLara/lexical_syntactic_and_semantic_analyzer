@@ -32,222 +32,222 @@ SKIP:{ < "/*" > : mlComment}
 //----------------------------------------------------
 TOKEN: {
     <classToken: "class">
-    {System.out.println("Palabra reservada class");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada class");} 
 }
 
 TOKEN: {
     <publicToken: "public">
-    {System.out.println("Palabra reservada public");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada public");} 
 }
 
 TOKEN: {
     <staticToken: "static">
-    {System.out.println("Palabra reservada static");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada static");} 
 }
 
 TOKEN: {
     <voidToken: "void">
-    {System.out.println("Palabra reservada void");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada void");} 
 }
 
 TOKEN: {
     <mainToken: "main">
-    {System.out.println("Palabra reservada main");}
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada main");}
 }
 
 
 TOKEN: {
     <stringToken: "String">
-    {System.out.println("Palabra reservada String");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada String");} 
 } 
 
 TOKEN: {
     <returnToken: "return">
-    {System.out.println("Palabra reservada return");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada return");} 
 }
 
 TOKEN: {
     <extendsToken: "extends">
-    {System.out.println("Palabra reservada extends");} 
+    {System.out.println(matchedToken.beginLine +": Palabra reservada extends");} 
 }
 
 TOKEN: {
     <intToken: "int">
-    {System.out.println("Palabra reservada int");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada int");} 
 }
 
 TOKEN: {
     <booleanToken: "boolean">
-    {System.out.println("Palabra reservada boolean");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada boolean");} 
 }
 
 TOKEN: {
     <floatToken: "float">
-    {System.out.println("Palabra reservada float");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada float");} 
 }
 
 TOKEN: {
     <ifToken: "if">
-    {System.out.println("Palabra reservada  if");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada  if");} 
 }
 
 TOKEN: {
     <elseToken: "else">
-    {System.out.println("Palabra reservada else");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada else");} 
 }
 
 TOKEN: {
     <whileToken: "while">
-    {System.out.println("Palabra reservada while");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada while");} 
 }
 
 TOKEN: {
     <trueToken: "true">
-    {System.out.println("Palabra reservada true");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada true");} 
 }
 
 TOKEN: {
     <falseToken: "false">
-    {System.out.println("Palabra reservada false");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada false");} 
 }
 
 TOKEN: {
     <thisToken: "this">
-    {System.out.println("Palabra reservada this");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada this");} 
 }
 
 TOKEN: {
     <newToken: "new">
-    {System.out.println("Palabra reservada new");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada new");} 
 }
 
 TOKEN: {
     <soutToken: "System.out.println">
-    {System.out.println("Palabra reservada System.out.println");} 
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada System.out.println");} 
 }
 
 //Grouping symbols
 //----------------------------------------------------
 TOKEN: {
     <openedBraceToken: "[">
-    {System.out.println("Agrupamiento [");} 
+    {System.out.println(matchedToken.beginLine + ": corchete abre");} 
 }
 
 TOKEN: {
     <closedBraceToken: "]">
-    {System.out.println("Agrupamiento ]");} 
+    {System.out.println(matchedToken.beginLine + ": corchete cierra");} 
 }
 
 TOKEN: {
     <openedParenthesisToken: "(">
-    {System.out.println("Agrupamiento (");} 
+    {System.out.println(matchedToken.beginLine + ": Parentesis abre");} 
 }
 
 TOKEN: {
     <closedParenthesisToken: ")">
-    {System.out.println("Agrupamiento )");} 
+    {System.out.println(matchedToken.beginLine + ": Parentesis cierra");} 
 }
 
 TOKEN: {
     <openedCurlyBracketsToken: "{">
-    {System.out.println("Agrupamiento {");} 
+    {System.out.println(matchedToken.beginLine + ": Llave abre");} 
 }
 
 TOKEN: {
     <closedCurlyBracketsToken: "}">
-    {System.out.println("Agrupamiento }");} 
+    {System.out.println(matchedToken.beginLine + ": Llave cierra");} 
 }
 
 TOKEN: {
     <semiColonToken: ";">
-    {System.out.println("Agrupamiento ;");}
+    {System.out.println(matchedToken.beginLine + ": Punto y coma");}
 }
 
 //Operator symbols
 //----------------------------------------------------
 TOKEN: {
     <equalsToken: "=">
-    {System.out.println("Operador =");} 
+    {System.out.println(matchedToken.beginLine + ": Operador =");} 
 }
 
 TOKEN: {
     <andToken: "&&">
-    {System.out.println("Operador &&");} 
+    {System.out.println(matchedToken.beginLine + ": Operador &&");} 
 }
 
 TOKEN: {
     <orToken: "|">
-    {System.out.println("Operador |");} 
+    {System.out.println(matchedToken.beginLine + ": Operador |");} 
 }
 
 TOKEN: {
     <lessThanToken: "<">
-    {System.out.println("Operador <");} 
+    {System.out.println(matchedToken.beginLine + ": Operador <");} 
 }
 
 TOKEN: {
     <moreThanToken: ">">
-    {System.out.println("Operador >");} 
+    {System.out.println(matchedToken.beginLine + ": Operador >");} 
 }
 
 TOKEN: {
     <lessOrEqualThanToken: "<=">
-    {System.out.println("Operador <=");} 
+    {System.out.println(matchedToken.beginLine + ": Operador <=");} 
 }
 
 TOKEN: {
     <moreOrEqualThanToken: ">=">
-    {System.out.println("Operador >=");} 
+    {System.out.println(matchedToken.beginLine + ": Operador >=");} 
 }
 
 TOKEN: {
     <plusToken: "+">
-    {System.out.println("Operador +");} 
+    {System.out.println(matchedToken.beginLine + ": Operador +");} 
 }
 
 TOKEN: {
 <minusToken: "-">
-{System.out.println("Operador -");} 
+{System.out.println(matchedToken.beginLine + ": Operador -");} 
 }
 
 TOKEN: {
     <multiplicationToken: "*">
-    {System.out.println("Operador *");} 
+    {System.out.println(matchedToken.beginLine + ": Operador *");} 
 }
 
 TOKEN: {
 <divisionToken: "/">
-{System.out.println("Operador /");} 
+{System.out.println(matchedToken.beginLine + ": Operador /");} 
 }
 
 TOKEN: {
     <dotToken: ".">
-    {System.out.println("Operador .");} 
+    {System.out.println(matchedToken.beginLine + ": Operador .");} 
 }
 
 TOKEN: {
     <notToken: "!">
-    {System.out.println("Operador !");} 
+    {System.out.println(matchedToken.beginLine + ": Operador !");} 
 }
 
 TOKEN: {
     <idToken: ((["a"-"z"]) | (["A"-"Z"]))
     ((["0"-"9"]){0,} | ("_"){0,} | (["a"-"z"]){0,} | (["A"-"Z"]){0,}){0,}>
-    {System.out.println("Identificador: " + image);} 
+    {System.out.println(matchedToken.beginLine + ": Identificador: " + image);} 
 }
 
 //Real constants
 //------------------------------------
 TOKEN:{
     <realConstToken: (["0"-"9"] | (["1"-"9"](["0"-"9"]){0,10}))"."(["0"-"9"]){1,11}>
-    {System.out.println("Constante real " + image);}
+    {System.out.println(matchedToken.beginLine + ": Constante real " + image);}
 }
 
 //Real ints
 //------------------------------------
 TOKEN:{
     <intConstToken: (["0"-"9"] | (["1"-"9"](["0"-"9"])+))>
-    {System.out.println("Constante entera " + image);}
+    {System.out.println(matchedToken.beginLine + ": Constante entera " + image);}
 }
 
 //Errors
@@ -286,16 +286,6 @@ SPECIAL_TOKEN:{
 <iDStartsWithNumber: (["0"-"9"]){0,} <idToken>>
 {System.out.println("Error en la linea: " + matchedToken.beginLine + ", el identificador " + image + " no debe inciar con un número");}
 }
-
-
-SPECIAL_TOKEN:{
-<iDContainsSpaces: 
-((["a"-"z"]) | (["A"-"Z"]))(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,} | 
-((["a"-"z"]) | (["A"-"Z"]))(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,}(" ")*((["0"-"9"]){1,} | ("_"){1,} | (["a"-"z"]){1,} | (["A"-"Z"]){1,}){1,}
->
-{System.out.println("Error en la linea: " + matchedToken.beginLine + ", el identificador " + image + " no debe haber espacios en los identificadores");}
-}
-
 
 SPECIAL_TOKEN: {
     <errorSymbNotIdent: ~[] >
