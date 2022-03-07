@@ -226,6 +226,11 @@ TOKEN: {
 }
 
 TOKEN: {
+    <commaToken: ",">
+    {System.out.println(matchedToken.beginLine + ": separador ,");} 
+}
+
+TOKEN: {
     <notToken: "!">
     {System.out.println(matchedToken.beginLine + ": Operador !");} 
 }
@@ -303,6 +308,6 @@ void analyzingInput():{}
 <booleanToken> | <floatToken> | <ifToken> | <elseToken> | <whileToken> | <trueToken> | <falseToken> | <thisToken> | <newToken> | <soutToken>
 | <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken> | <semiColonToken> | <equalsToken>
 | <realConstToken> | <intConstToken> | <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
-| <divisionToken> | <dotToken> | <notToken> | <idToken>
+| <divisionToken> | <dotToken> | <commaToken> | <notToken> | <idToken>
 ) + <EOF>
 }
