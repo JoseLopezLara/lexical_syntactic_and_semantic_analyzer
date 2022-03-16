@@ -4,7 +4,7 @@ PARSER_BEGIN(Analyzer)
 public class Analyzer{
     public static void main (String args[]) throws ParseException{
         Analyzer miniJavaAnalizer=new Analyzer(System.in);
-        miniJavaAnalizer.analyzingInput();
+        miniJavaAnalizer.Program();
     }
 }
 
@@ -126,6 +126,12 @@ TOKEN: {
     {System.out.println(matchedToken.beginLine + ": Palabra reservada System.out.println");} 
 }
 
+
+TOKEN: {
+    <lengthToken: "length">
+    {System.out.println(matchedToken.beginLine + ": Palabra reservada length");} 
+}
+
 //Grouping symbols
 //----------------------------------------------------
 TOKEN: {
@@ -171,12 +177,17 @@ TOKEN: {
 }
 
 TOKEN: {
+    <comparationToken: "==">
+    {System.out.println(matchedToken.beginLine + ": Operador ==");} 
+}
+
+TOKEN: {
     <andToken: "&&">
     {System.out.println(matchedToken.beginLine + ": Operador &&");} 
 }
 
 TOKEN: {
-    <orToken: "|">
+    <orToken: "||">
     {System.out.println(matchedToken.beginLine + ": Operador |");} 
 }
 
@@ -301,13 +312,94 @@ SPECIAL_TOKEN: {
 
 
 
-
-void analyzingInput():{}
+/*
+*****************************SINTAXIS*****************************
+*/
+void Program():{}
 {
-(<classToken> | <publicToken> | <staticToken> | <voidToken> | <mainToken> | <stringToken> | <returnToken> | <extendsToken> | <intToken> |
-<booleanToken> | <floatToken> | <ifToken> | <elseToken> | <whileToken> | <trueToken> | <falseToken> | <thisToken> | <newToken> | <soutToken>
-| <openedBraceToken> | <closedBraceToken> | <openedParenthesisToken> | <closedParenthesisToken> | <openedCurlyBracketsToken> | <closedCurlyBracketsToken> | <semiColonToken> | <equalsToken>
-| <realConstToken> | <intConstToken> | <andToken> | <orToken> | <lessThanToken> | <moreThanToken> | <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> | <minusToken> | <multiplicationToken>
-| <divisionToken> | <dotToken> | <commaToken> | <notToken> | <idToken>
-) + <EOF>
+MainClass() (ClassDeclaration())* <EOF>
+}
+
+void MainClass():{}
+{
+<classToken> Identifier() <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
+<mainToken> <openedParenthesisToken> <stringToken> <openedBraceToken> <closedBraceToken>
+Identifier() <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
+<closedCurlyBracketsToken>
+}
+
+void ClassDeclaration(): {}
+{
+<classToken> Identifier() (<extendsToken> Identifier())? <openedCurlyBracketsToken>
+(VarDeclaration())* (MethodDeclaration())* <closedCurlyBracketsToken>
+}
+
+
+void VarDeclaration():{}
+{
+Type() Identifier() TwoOrMoreVar() <semiColonToken>
+}
+
+
+void TwoOrMoreVar():{}
+{
+(<commaToken> Identifier())*
+}
+
+void MethodDeclaration():{}
+{
+<publicToken> Type() Identifier() <openedParenthesisToken> (Type() Identifier() ( <commaToken> Type() Identifier())* )?
+<closedParenthesisToken> <openedCurlyBracketsToken> (VarDeclaration())* (Statement())* <returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
+}
+
+
+void Type():{}
+{
+<intToken> <openedBraceToken> <closedBraceToken>
+|<booleanToken> | <intToken> | <floatToken> | <stringToken> 
+| Identifier()
+| <floatToken> <openedBraceToken> <closedBraceToken>
+}
+
+void Statement():{}
+{
+<openedCurlyBracketsToken>(Statement())*<closedCurlyBracketsToken>
+| <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
+|<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
+| <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
+| Identifier() <equalsToken> Expression() <semiColonToken>
+| Identifier() <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
+}
+
+void Expression():{}
+{
+<intConstToken>ExpressionPrime()
+| <realConstToken>ExpressionPrime()
+|<trueToken>ExpressionPrime()
+| <falseToken>ExpressionPrime()
+|Identifier()ExpressionPrime()
+|<thisToken>ExpressionPrime()
+|<newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
+| <newToken> Identifier() <openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
+|<notToken>Expression()ExpressionPrime()
+|<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime()
+}
+
+void ExpressionPrime():{}
+{
+(
+(
+<andToken> | <orToken> | <lessThanToken> | <moreThanToken> |
+<lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> |
+<minusToken> | <multiplicationToken> | <divisionToken> | <comparationToken>
+)Expression()ExpressionPrime()
+| <openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
+| <dotToken> <lengthToken> ExpressionPrime()
+| <dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
+)*
+}
+
+void Identifier():{}
+{
+<idToken>
 }
