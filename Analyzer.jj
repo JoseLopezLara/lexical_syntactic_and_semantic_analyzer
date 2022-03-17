@@ -343,20 +343,21 @@ Type() Identifier() TwoOrMoreVar() <semiColonToken>
 
 void TwoOrMoreVar():{}
 {
-(<commaToken> Identifier())*
+(LOOKAHEAD(2)<commaToken> Identifier())*
 }
 
 void MethodDeclaration():{}
 {
 <publicToken> Type() Identifier() <openedParenthesisToken> (Type() Identifier() ( <commaToken> Type() Identifier())* )?
-<closedParenthesisToken> <openedCurlyBracketsToken> (VarDeclaration())* (Statement())* <returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
+<closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
+<returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
 }
 
 
 void Type():{}
 {
-<intToken> <openedBraceToken> <closedBraceToken>
-|<booleanToken> | <intToken> | <floatToken> | <stringToken> 
+LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> 
+|<booleanToken> | <intToken> | LOOKAHEAD(2) <floatToken> | <stringToken> 
 | Identifier()
 | <floatToken> <openedBraceToken> <closedBraceToken>
 }
@@ -367,7 +368,7 @@ void Statement():{}
 | <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
 |<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
 | <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
-| Identifier() <equalsToken> Expression() <semiColonToken>
+| LOOKAHEAD(2) Identifier() <equalsToken> Expression() <semiColonToken>
 | Identifier() <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
 }
 
@@ -379,7 +380,7 @@ void Expression():{}
 | <falseToken>ExpressionPrime()
 |Identifier()ExpressionPrime()
 |<thisToken>ExpressionPrime()
-|<newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
+|LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
 | <newToken> Identifier() <openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
 |<notToken>Expression()ExpressionPrime()
 |<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime()
@@ -387,15 +388,15 @@ void Expression():{}
 
 void ExpressionPrime():{}
 {
-(
+(           
 (
 <andToken> | <orToken> | <lessThanToken> | <moreThanToken> |
 <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> |
 <minusToken> | <multiplicationToken> | <divisionToken> | <comparationToken>
-)Expression()ExpressionPrime()
+)Expression() ExpressionPrime()
 | <openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
-| <dotToken> <lengthToken> ExpressionPrime()
-| <dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
+|LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
+|<dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
 }
 
