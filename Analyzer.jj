@@ -1,10 +1,16 @@
-options {Ignore_Case = false;}
+options {
+Ignore_Case = false;
+//STATIC=false;
+//DEBUG_PARSER=true;
+//DEBUG_LOOKAHEAD=true;
+}
 PARSER_BEGIN(Analyzer)
 
 public class Analyzer{
     public static void main (String args[]) throws ParseException{
         Analyzer miniJavaAnalizer=new Analyzer(System.in);
         miniJavaAnalizer.Program();
+		System.out.println("Compilación exitosa");
     }
 }
 
@@ -360,6 +366,7 @@ LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken>
 |<booleanToken> | <intToken> | LOOKAHEAD(2) <floatToken> | <stringToken> 
 | Identifier()
 | <floatToken> <openedBraceToken> <closedBraceToken>
+
 }
 
 void Statement():{}
@@ -368,8 +375,8 @@ void Statement():{}
 | <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
 |<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
 | <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
-| LOOKAHEAD(2) Identifier() <equalsToken> Expression() <semiColonToken>
-| Identifier() <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
+|LOOKAHEAD(2)Identifier() <equalsToken> Expression() <semiColonToken>
+|Identifier() <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
 }
 
 void Expression():{}
@@ -388,15 +395,15 @@ void Expression():{}
 
 void ExpressionPrime():{}
 {
-(           
+(         
 (
 <andToken> | <orToken> | <lessThanToken> | <moreThanToken> |
 <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> |
 <minusToken> | <multiplicationToken> | <divisionToken> | <comparationToken>
 )Expression() ExpressionPrime()
-| <openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
+| LOOKAHEAD(5)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
 |LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
-|<dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
+|LOOKAHEAD(2)<dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
 }
 
