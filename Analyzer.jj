@@ -406,4 +406,3 @@ void ExpressionPrime():{}
 |LOOKAHEAD(2)<dotToken> <idToken> <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
 }
-
