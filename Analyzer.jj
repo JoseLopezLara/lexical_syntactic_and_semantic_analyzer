@@ -328,33 +328,33 @@ MainClass() (ClassDeclaration())* <EOF>
 
 void MainClass():{}
 {
-<classToken> Identifier() <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
+<classToken> <idToken> <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
 <mainToken> <openedParenthesisToken> <stringToken> <openedBraceToken> <closedBraceToken>
-Identifier() <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
+<idToken> <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
 <closedCurlyBracketsToken>
 }
 
 void ClassDeclaration(): {}
 {
-<classToken> Identifier() (<extendsToken> Identifier())? <openedCurlyBracketsToken>
+<classToken> <idToken> (<extendsToken> <idToken>)? <openedCurlyBracketsToken>
 (VarDeclaration())* (MethodDeclaration())* <closedCurlyBracketsToken>
 }
 
 
 void VarDeclaration():{}
 {
-Type() Identifier() TwoOrMoreVar() <semiColonToken>
+Type() <idToken> TwoOrMoreVar() <semiColonToken>
 }
 
 
 void TwoOrMoreVar():{}
 {
-(LOOKAHEAD(2)<commaToken> Identifier())*
+(LOOKAHEAD(2)<commaToken> <idToken>)*
 }
 
 void MethodDeclaration():{}
 {
-<publicToken> Type() Identifier() <openedParenthesisToken> (Type() Identifier() ( <commaToken> Type() Identifier())* )?
+<publicToken> Type() <idToken> <openedParenthesisToken> (Type() <idToken> ( <commaToken> Type() <idToken>)* )?
 <closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
 <returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
 }
@@ -364,7 +364,7 @@ void Type():{}
 {
 LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> 
 |<booleanToken> | <intToken> | LOOKAHEAD(2) <floatToken> | <stringToken> 
-| Identifier()
+| <idToken>
 | <floatToken> <openedBraceToken> <closedBraceToken>
 
 }
@@ -375,8 +375,8 @@ void Statement():{}
 | <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
 |<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
 | <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
-|LOOKAHEAD(2)Identifier() <equalsToken> Expression() <semiColonToken>
-|Identifier() <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
+|LOOKAHEAD(2)<idToken> <equalsToken> Expression() <semiColonToken>
+|<idToken> <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
 }
 
 void Expression():{}
@@ -385,10 +385,10 @@ void Expression():{}
 | <realConstToken>ExpressionPrime()
 |<trueToken>ExpressionPrime()
 | <falseToken>ExpressionPrime()
-|Identifier()ExpressionPrime()
+|<idToken>ExpressionPrime()
 |<thisToken>ExpressionPrime()
 |LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
-| <newToken> Identifier() <openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
+| <newToken> <idToken> <openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
 |<notToken>Expression()ExpressionPrime()
 |<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime()
 }
@@ -403,11 +403,7 @@ void ExpressionPrime():{}
 )Expression() ExpressionPrime()
 | LOOKAHEAD(5)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
 |LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
-|LOOKAHEAD(2)<dotToken> Identifier() <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
+|LOOKAHEAD(2)<dotToken> <idToken> <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
 }
 
-void Identifier():{}
-{
-<idToken>
-}
