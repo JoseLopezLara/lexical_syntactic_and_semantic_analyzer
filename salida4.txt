@@ -1,0 +1,15 @@
+4: Palabra reservada class
+4: Identificador: Principal
+4: Llave abre
+5: Palabra reservada public
+5: Palabra reservada static
+5: Palabra reservada void
+5: Palabra reservada main
+5: Parentesis abre
+5: Palabra reservada String
+5: corchete abre
+5: corchete cierra
+5: Identificador: a
+5: Parentesis cierra
+5: Llave abre
+6: Palabra reservada float

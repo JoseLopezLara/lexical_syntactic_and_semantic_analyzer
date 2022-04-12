@@ -20,24 +20,20 @@ public class Analyzer{
     }
 
 
-public static void busqueda(String id, String dataType, String category, String size){
+public static void insert(String id, String dataType, String category, String size){
     Symbol symbol = new Symbol(id , dataType, category, size);
-
-if (hashMap.containsKey(id)) {
-    Symbol symbolFound = (Symbol) hashMap.get(id);
-    if(!symbol.toString().equals(symbolFound.toString())){//Atributos Diferentes
-    System.out.println("-Different: "+id);
-        insert(id, symbol);
-    }
-}else{
-    insert(id, symbol);
-}
-}
-
-
-public static void insert(String id, Symbol symbol){
     hashMap.put(id,symbol);
 }
+
+public static void busqueda(String id){
+if (hashMap.containsKey(id)) {
+    Symbol symbolFound = (Symbol) hashMap.get(id);
+    System.out.println("Found: "+symbolFound.toString());
+}else{
+     System.out.println("Not found");
+}
+}
+
 
 public static void delete(String id){
     hashMap.remove(id);
@@ -397,11 +393,11 @@ MainClass() (ClassDeclaration())* <EOF>
 void MainClass():{}
 {
 <classToken> <idToken>{String image=token.image;
-busqueda(image, "void", "clase", "");
+insert(image, "void", "clase", "0");
 } <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
 <mainToken> <openedParenthesisToken> <stringToken> <openedBraceToken> <closedBraceToken>
 <idToken>{image=token.image;
-busqueda(image, "void", "arreglo", "0");
+insert(image, "void", "arreglo", "0");
 } <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
 <closedCurlyBracketsToken>
 }
@@ -410,7 +406,7 @@ void ClassDeclaration(): {}
 {
 <classToken> <idToken>
 {String image=token.image;
-busqueda(image, "void", "clase", "");
+insert(image, "void", "clase", "0");
 }
 (<extendsToken> <idToken>)? <openedCurlyBracketsToken>
 (VarDeclaration())* (MethodDeclaration())* <closedCurlyBracketsToken>
@@ -421,9 +417,9 @@ void VarDeclaration():{String type; String image; int tam=0;}
 {
 type=Type() <idToken>
 {image=token.image;
-if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", tam+""); 
-else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", tam+"");
-else busqueda(image, type, "variable", ""); 
+if(type.equals("arreglo-float"))insert(image, "float", "arreglo", tam+""); 
+else if(type.equals("arreglo-int"))insert(image, "int", "arreglo", tam+"");
+else insert(image, type, "variable", "0"); 
 tam++;
 }
  TwoOrMoreVar() <semiColonToken>
@@ -439,19 +435,17 @@ void MethodDeclaration():{String type; int tam=0;}
 {
 <publicToken> type=Type() <idToken>{String imageMethod=token.image;}
 <openedParenthesisToken> (type=Type() <idToken>{String image=token.image;
-System.out.println("----------------------******"+type);
-if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", ""); 
-else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", "");
-else busqueda(image, type, "variable", ""); 
+if(type.equals("arreglo-float"))insert(image, "float", "arreglo", "0"); 
+else if(type.equals("arreglo-int"))insert(image, "int", "arreglo", "0");
+else insert(image, type, "variable", "0"); 
 tam++;
 } ( <commaToken> type=Type() <idToken>{image=token.image;
-System.out.println("----------------------******"+type);
-if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", ""); 
-else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", "");
-else busqueda(image, type, "variable", ""); 
+if(type.equals("arreglo-float"))insert(image, "float", "arreglo", "0"); 
+else if(type.equals("arreglo-int"))insert(image, "int", "arreglo", "0");
+else insert(image, type, "variable", "0"); 
 tam++;
 })* )?
-{busqueda(imageMethod, type, "Funcion", tam+"");}
+{insert(imageMethod, type, "Funcion", tam+"");}
 <closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
 <returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
 }
