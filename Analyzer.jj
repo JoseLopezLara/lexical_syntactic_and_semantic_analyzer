@@ -5,14 +5,82 @@ Ignore_Case = false;
 //DEBUG_LOOKAHEAD=true;
 }
 PARSER_BEGIN(Analyzer)
+import java.lang.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Analyzer{
+    static HashMap <String, Object> hashMap = new HashMap <String, Object> ();
+
     public static void main (String args[]) throws ParseException{
         Analyzer miniJavaAnalizer=new Analyzer(System.in);
         miniJavaAnalizer.Program();
-		System.out.println("Compilación exitosa");
+        printTable();
+		System.out.println("Compilacion exitosa");
+    }
+
+
+public static void busqueda(String id, String dataType, String category, String size){
+    Symbol symbol = new Symbol(id , dataType, category, size);
+
+if (hashMap.containsKey(id)) {
+    Symbol symbolFound = (Symbol) hashMap.get(id);
+    if(!symbol.toString().equals(symbolFound.toString())){//Atributos Diferentes
+    System.out.println("-Different: "+id);
+        insert(id, symbol);
+    }
+}else{
+    insert(id, symbol);
+}
+}
+
+
+public static void insert(String id, Symbol symbol){
+    hashMap.put(id,symbol);
+}
+
+public static void delete(String id){
+    hashMap.remove(id);
+}
+
+public static void printTable(){
+    System.out.println("----------------------");
+    System.out.println("TABLA DE SIMBOLOS: ");
+    for (String i : hashMap.keySet()) {
+        System.out.println(hashMap.get(i));
     }
 }
+
+
+public static class Symbol {
+ String id, dataType, category, size;
+	public Symbol(String id, String dataType, String category, String size){
+		this.id=id;
+		this.dataType=dataType;
+        this.category=category;
+        this.size=size;
+	}
+
+    String getId(){
+        return id;
+    }
+    String getDataType(){
+        return dataType;
+    }
+    String getCategory(){
+        return category;
+    }
+    String getSize(){
+        return size;
+    }
+
+    public String toString(){
+    return getId()+ "-" + getDataType()+ "-" + getCategory()+ "-" + getSize();        
+  }
+}
+
+}
+
 
 PARSER_END(Analyzer)
 
@@ -328,22 +396,37 @@ MainClass() (ClassDeclaration())* <EOF>
 
 void MainClass():{}
 {
-<classToken> <idToken> <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
+<classToken> <idToken>{String image=token.image;
+busqueda(image, "void", "clase", "");
+} <openedCurlyBracketsToken> <publicToken> <staticToken> <voidToken>
 <mainToken> <openedParenthesisToken> <stringToken> <openedBraceToken> <closedBraceToken>
-<idToken> <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
+<idToken>{image=token.image;
+busqueda(image, "void", "arreglo", "0");
+} <closedParenthesisToken> <openedCurlyBracketsToken> Statement() <closedCurlyBracketsToken>
 <closedCurlyBracketsToken>
 }
 
 void ClassDeclaration(): {}
 {
-<classToken> <idToken> (<extendsToken> <idToken>)? <openedCurlyBracketsToken>
+<classToken> <idToken>
+{String image=token.image;
+busqueda(image, "void", "clase", "");
+}
+(<extendsToken> <idToken>)? <openedCurlyBracketsToken>
 (VarDeclaration())* (MethodDeclaration())* <closedCurlyBracketsToken>
 }
 
 
-void VarDeclaration():{}
+void VarDeclaration():{String type; String image; int tam=0;}
 {
-Type() <idToken> TwoOrMoreVar() <semiColonToken>
+type=Type() <idToken>
+{image=token.image;
+if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", tam+""); 
+else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", tam+"");
+else busqueda(image, type, "variable", ""); 
+tam++;
+}
+ TwoOrMoreVar() <semiColonToken>
 }
 
 
@@ -352,20 +435,34 @@ void TwoOrMoreVar():{}
 (LOOKAHEAD(2)<commaToken> <idToken>)*
 }
 
-void MethodDeclaration():{}
+void MethodDeclaration():{String type; int tam=0;}
 {
-<publicToken> Type() <idToken> <openedParenthesisToken> (Type() <idToken> ( <commaToken> Type() <idToken>)* )?
+<publicToken> type=Type() <idToken>{String imageMethod=token.image;}
+<openedParenthesisToken> (type=Type() <idToken>{String image=token.image;
+System.out.println("----------------------******"+type);
+if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", ""); 
+else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", "");
+else busqueda(image, type, "variable", ""); 
+tam++;
+} ( <commaToken> type=Type() <idToken>{image=token.image;
+System.out.println("----------------------******"+type);
+if(type.equals("arreglo-float"))busqueda(image, "float", "arreglo", ""); 
+else if(type.equals("arreglo-int"))busqueda(image, "int", "arreglo", "");
+else busqueda(image, type, "variable", ""); 
+tam++;
+})* )?
+{busqueda(imageMethod, type, "Funcion", tam+"");}
 <closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
 <returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
 }
 
 
-void Type():{}
+String Type():{}
 {
-LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> 
-|<booleanToken> | <intToken> | LOOKAHEAD(2) <floatToken> | <stringToken> 
-| <idToken>
-| <floatToken> <openedBraceToken> <closedBraceToken>
+LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> {return "arreglo-int";}
+|<booleanToken> {return "boolean";} | <intToken> {return "int";} | LOOKAHEAD(2) <floatToken>{return "float";} | <stringToken> {return "String";}
+| <idToken>{return token.image;}
+| <floatToken> <openedBraceToken> <closedBraceToken> {return "arreglo-float";}
 
 }
 
@@ -385,10 +482,10 @@ void Expression():{}
 | <realConstToken>ExpressionPrime()
 |<trueToken>ExpressionPrime()
 | <falseToken>ExpressionPrime()
-|<idToken>ExpressionPrime()
+|<idToken> ExpressionPrime()
 |<thisToken>ExpressionPrime()
 |LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
-| <newToken> <idToken> <openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
+| <newToken> <idToken><openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
 |<notToken>Expression()ExpressionPrime()
 |<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime()
 }
@@ -403,6 +500,6 @@ void ExpressionPrime():{}
 )Expression() ExpressionPrime()
 | LOOKAHEAD(5)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
 |LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
-|LOOKAHEAD(2)<dotToken> <idToken> <openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
+|LOOKAHEAD(2)<dotToken> <idToken><openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
 }
