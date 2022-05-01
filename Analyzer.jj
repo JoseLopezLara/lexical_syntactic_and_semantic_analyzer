@@ -25,14 +25,30 @@ public static void insert(String id, String dataType, String category, String si
     hashMap.put(id,symbol);
 }
 
-public static void busqueda(String id){
+public static Symbol busqueda(String id){
 if (hashMap.containsKey(id)) {
     Symbol symbolFound = (Symbol) hashMap.get(id);
-    System.out.println("Found: "+symbolFound.toString());
+	 System.out.println("Found: "+symbolFound.toString());
+	return symbolFound;
 }else{
-     System.out.println("Not found");
+	 System.out.println("Not found");
+	return null;
 }
 }
+
+public static void resultadoBusqueda(String id, String catId){
+Symbol foundSymbol=busqueda(id);
+System.out.println("Analizando " + id);
+if(foundSymbol!=null){
+if(foundSymbol.getCategory().equals(catId)){
+System.out.println("Encontrado " + id + " es " + foundSymbol.getCategory());
+}
+}
+else{
+System.out.println(id + " no existe " + catId );
+}
+}
+
 
 
 public static void delete(String id){
@@ -413,25 +429,24 @@ insert(image, "void", "clase", "0");
 }
 
 
-void VarDeclaration():{String type; String image; int tam=0;}
+void VarDeclaration():{String type=""; String image; int tam=0; String category="";}
 {
 type=Type() <idToken>
 {image=token.image;
-if(type.equals("arreglo-float"))insert(image, "float", "arreglo", tam+""); 
-else if(type.equals("arreglo-int"))insert(image, "int", "arreglo", tam+"");
-else insert(image, type, "variable", "0"); 
-tam++;
+if(type.equals("arreglo-float")){category="arreglo"; insert(image, "float", "arreglo", tam+"");} 
+else if(type.equals("arreglo-int")){category="arreglo"; insert(image, "int", "arreglo", tam+"");}
+else{ category="variable"; insert(image, type, "variable", "0"); }
 }
- TwoOrMoreVar() <semiColonToken>
+ TwoOrMoreVar(type, category, tam+"") <semiColonToken>
 }
 
-
-void TwoOrMoreVar():{}
+void TwoOrMoreVar(String type, String category, String tam):{String image;}
 {
-(LOOKAHEAD(2)<commaToken> <idToken>)*
+(LOOKAHEAD(2)<commaToken> <idToken> {image=token.image; insert(image, type, category, tam); })*
 }
 
-void MethodDeclaration():{String type; int tam=0;}
+
+void MethodDeclaration():{String type; int tam=0; String dataReturn="void";}
 {
 <publicToken> type=Type() <idToken>{String imageMethod=token.image;}
 <openedParenthesisToken> (type=Type() <idToken>{String image=token.image;
@@ -447,9 +462,15 @@ tam++;
 })* )?
 {insert(imageMethod, type, "Funcion", tam+"");}
 <closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
-<returnToken> Expression() <semiColonToken> <closedCurlyBracketsToken>
+<returnToken> dataReturn=Expression() 
+{
+if(!type.equals(dataReturn))
+{
+System.out.println( "Tipos de datos inconsistentes. Método: " + type + " retorno: " + dataReturn);
 }
-
+} 
+<semiColonToken> <closedCurlyBracketsToken>
+}
 
 String Type():{}
 {
@@ -460,28 +481,60 @@ LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> {return "arreglo-i
 
 }
 
-void Statement():{}
+void Statement():{String lexeme;}
 {
 <openedCurlyBracketsToken>(Statement())*<closedCurlyBracketsToken>
 | <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
 |<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
 | <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
-|LOOKAHEAD(2)<idToken> <equalsToken> Expression() <semiColonToken>
-|<idToken> <openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
+
+//---------------Expresiones del tipo a=b;---------------
+|LOOKAHEAD(2)<idToken>
+{
+lexeme = token.image;
+resultadoBusqueda(lexeme, "variable");
+} 
+<equalsToken> Expression() <semiColonToken>
+
+//---------------Expresiones del tipo a[expresión()]=expresión();---------------
+|<idToken> 
+{
+lexeme = token.image;
+resultadoBusqueda(lexeme, "arreglo");
+}
+<openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
 }
 
-void Expression():{}
+
+String Expression():{String lexeme; String dataReturn="void";}
 {
-<intConstToken>ExpressionPrime()
-| <realConstToken>ExpressionPrime()
-|<trueToken>ExpressionPrime()
-| <falseToken>ExpressionPrime()
-|<idToken> ExpressionPrime()
-|<thisToken>ExpressionPrime()
-|LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
-| <newToken> <idToken><openedParenthesisToken> <closedParenthesisToken> ExpressionPrime()
-|<notToken>Expression()ExpressionPrime()
-|<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime()
+<intConstToken> {dataReturn="int";}ExpressionPrime() {return dataReturn;}
+| <realConstToken>{dataReturn="double";}ExpressionPrime() {return dataReturn;}
+|<trueToken>{dataReturn="true";}ExpressionPrime() {return dataReturn;}
+| <falseToken>{dataReturn="false";}ExpressionPrime() {return dataReturn;}
+
+//---------------Expresiones del tipo a=b;---------------
+|<idToken> 
+{
+lexeme = token.image;
+Symbol foundSymbol=busqueda(lexeme);
+System.out.println("Analizando " + lexeme);
+if(foundSymbol!=null){
+if(foundSymbol.getCategory().equals("variable")){
+dataReturn= foundSymbol.getDataType();
+System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory());
+}
+}
+else{
+System.out.println(lexeme + " no existe ");
+}
+} ExpressionPrime() {return dataReturn;}
+
+|<thisToken>ExpressionPrime() {return dataReturn;}
+|LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime() {return dataReturn;}
+| <newToken> <idToken><openedParenthesisToken> <closedParenthesisToken> ExpressionPrime() {return dataReturn;}
+|<notToken>Expression()ExpressionPrime() {return dataReturn;}
+|<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime() {return dataReturn;}
 }
 
 void ExpressionPrime():{}
@@ -492,7 +545,7 @@ void ExpressionPrime():{}
 <lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> |
 <minusToken> | <multiplicationToken> | <divisionToken> | <comparationToken>
 )Expression() ExpressionPrime()
-| LOOKAHEAD(5)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
+| LOOKAHEAD(2)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
 |LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
 |LOOKAHEAD(2)<dotToken> <idToken><openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
 )*
