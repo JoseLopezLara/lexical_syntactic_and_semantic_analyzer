@@ -28,10 +28,8 @@ public static void insert(String id, String dataType, String category, String si
 public static Symbol busqueda(String id){
 if (hashMap.containsKey(id)) {
     Symbol symbolFound = (Symbol) hashMap.get(id);
-	 System.out.println("Found: "+symbolFound.toString());
 	return symbolFound;
 }else{
-	 System.out.println("Not found");
 	return null;
 }
 }
@@ -84,6 +82,10 @@ public static class Symbol {
     }
     String getSize(){
         return size;
+    }
+	
+	void setSize(String size){
+        this.size=size;
     }
 
     public String toString(){
@@ -432,7 +434,8 @@ insert(image, "void", "clase", "0");
 void VarDeclaration():{String type=""; String image; int tam=0; String category="";}
 {
 type=Type() <idToken>
-{image=token.image;
+{
+image=token.image;
 if(type.equals("arreglo-float")){category="arreglo"; insert(image, "float", "arreglo", tam+"");} 
 else if(type.equals("arreglo-int")){category="arreglo"; insert(image, "int", "arreglo", tam+"");}
 else{ category="variable"; insert(image, type, "variable", "0"); }
@@ -462,11 +465,15 @@ tam++;
 })* )?
 {insert(imageMethod, type, "Funcion", tam+"");}
 <closedParenthesisToken> <openedCurlyBracketsToken> (LOOKAHEAD(2)VarDeclaration())* (Statement())* 
-<returnToken> dataReturn=Expression() 
+<returnToken> dataReturn=Expression(0, "") 
 {
 if(!type.equals(dataReturn))
 {
 System.out.println( "Tipos de datos inconsistentes. Método: " + type + " retorno: " + dataReturn);
+}
+
+else{
+System.out.println( "Tipos de datos iguales. Método: " + type + " retorno: " + dataReturn);
 }
 } 
 <semiColonToken> <closedCurlyBracketsToken>
@@ -481,37 +488,143 @@ LOOKAHEAD(2) <intToken> <openedBraceToken> <closedBraceToken> {return "arreglo-i
 
 }
 
-void Statement():{String lexeme;}
+void Statement():{String lexeme; String dataType=""; String returnDataType=""; boolean fSymbol=false; int arraySize=0; String arrayName="";}
 {
 <openedCurlyBracketsToken>(Statement())*<closedCurlyBracketsToken>
-| <ifToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement() <elseToken> Statement()
-|<whileToken> <openedParenthesisToken> Expression() <closedParenthesisToken> Statement()
-| <soutToken> <openedParenthesisToken> Expression() <closedParenthesisToken> <semiColonToken>
+| <ifToken> <openedParenthesisToken> Expression(0, "") <closedParenthesisToken> Statement() <elseToken> Statement()
+|<whileToken> <openedParenthesisToken> Expression(0, "") <closedParenthesisToken> Statement()
+| <soutToken> <openedParenthesisToken> Expression(0, "") <closedParenthesisToken> <semiColonToken>
 
 //---------------Expresiones del tipo a=b;---------------
 |LOOKAHEAD(2)<idToken>
 {
 lexeme = token.image;
-resultadoBusqueda(lexeme, "variable");
+Symbol foundSymbol=busqueda(lexeme);
+System.out.println("Analizando " + lexeme);
+if(foundSymbol!=null){
+if(foundSymbol.getCategory().equals("variable")){
+dataType= foundSymbol.getDataType();
+
+//Checks if variable exists before check if its value it's correct
+fSymbol=true;
+System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory() + " tipo: " + dataType);
+}
+
+if(foundSymbol.getCategory().equals("arreglo")){
+arrayName=lexeme;
+}
+}
+else{
+fSymbol=false;
+System.out.println(lexeme + " no existe ");
+}
 } 
-<equalsToken> Expression() <semiColonToken>
+<equalsToken> returnDataType=Expression(0, arrayName) 
+{
+if(fSymbol && dataType.equals(returnDataType))
+{
+System.out.println("Correcto, tipo de dato: "  + dataType + " asignado " + returnDataType);
+}
+
+else if (fSymbol && returnDataType.equals("noApply")){
+System.out.println("Correcto, tipo de dato: "  + dataType + " asignado " + dataType);
+}
+
+else if(fSymbol && !dataType.equals(returnDataType)){
+if(returnDataType.equals("AritmeticError")){
+System.out.println("Error, algun o algunos datos de la expresión NO son números");
+}
+
+else
+System.out.println("Error, tipo de dato: " + dataType + " asignado " + returnDataType);
+}
+} <semiColonToken>
 
 //---------------Expresiones del tipo a[expresión()]=expresión();---------------
 |<idToken> 
 {
 lexeme = token.image;
-resultadoBusqueda(lexeme, "arreglo");
+Symbol foundSymbol=busqueda(lexeme);
+System.out.println("Analizando " + lexeme);
+if(foundSymbol!=null){
+if(foundSymbol.getCategory().equals("arreglo")){
+dataType= foundSymbol.getDataType();
+arraySize= Integer.parseInt(foundSymbol.getSize());
+//Checks if variable exists before check if its value it's correct
+fSymbol=true;
+System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory() + "tipo: " + dataType);
 }
-<openedBraceToken> Expression() <closedBraceToken> <equalsToken> Expression() <semiColonToken>
 }
-
-
-String Expression():{String lexeme; String dataReturn="void";}
+else{
+fSymbol=false;
+System.out.println(lexeme + " no existe ");
+}
+}
+<openedBraceToken> Expression(arraySize, "") <closedBraceToken> <equalsToken> returnDataType=Expression(0, "") 
 {
-<intConstToken> {dataReturn="int";}ExpressionPrime() {return dataReturn;}
-| <realConstToken>{dataReturn="double";}ExpressionPrime() {return dataReturn;}
-|<trueToken>{dataReturn="true";}ExpressionPrime() {return dataReturn;}
-| <falseToken>{dataReturn="false";}ExpressionPrime() {return dataReturn;}
+if(fSymbol && dataType.equals(returnDataType))
+{
+System.out.println("Correcto, tipo de dato: "  + dataType + " asignado " + returnDataType);
+}
+else if(fSymbol && !dataType.equals(returnDataType)){
+if(returnDataType.equals("AritmeticError")){
+System.out.println("Error, algun o algunos datos de la expresión NO son números");
+}
+else
+System.out.println("Error, tipo de dato: " + dataType + " asignado " + returnDataType);
+}
+}
+
+<semiColonToken>
+}
+
+
+
+
+String Expression(int arraySize, String arrayName):{String lexeme; String dataReturn="void"; String nextDataType="";}
+{
+<intConstToken> 
+{
+lexeme = token.image;
+int lexemeValue = Integer.parseInt(lexeme);
+
+if(!arrayName.equals("")){
+Symbol foundSymbol=busqueda(arrayName);
+foundSymbol.setSize(lexeme);
+hashMap.put(arrayName,foundSymbol);
+}
+
+if(arraySize>0 && lexemeValue>arraySize){
+System.out.println("La posición (" + lexemeValue +") supera el tamaño del arreglo (" + arraySize + ")" );
+}
+dataReturn="int";
+}
+nextDataType=ExpressionPrime(dataReturn) 
+{ 
+if (!dataReturn.equals(nextDataType)) 
+dataReturn=nextDataType;
+return dataReturn;
+}
+
+| <realConstToken>{dataReturn="float";}nextDataType=ExpressionPrime(dataReturn)
+{ 
+if (!dataReturn.equals(nextDataType)) 
+dataReturn=nextDataType;
+return dataReturn;
+}
+
+|<trueToken>{dataReturn="boolean";}nextDataType=ExpressionPrime(dataReturn)
+{ 
+if (!dataReturn.equals(nextDataType)) 
+dataReturn=nextDataType;
+return dataReturn;
+}
+| <falseToken>{dataReturn="boolean";}nextDataType=ExpressionPrime(dataReturn) 
+{ 
+if (!dataReturn.equals(nextDataType)) 
+dataReturn=nextDataType;
+return dataReturn;
+}
 
 //---------------Expresiones del tipo a=b;---------------
 |<idToken> 
@@ -522,31 +635,64 @@ System.out.println("Analizando " + lexeme);
 if(foundSymbol!=null){
 if(foundSymbol.getCategory().equals("variable")){
 dataReturn= foundSymbol.getDataType();
-System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory());
+System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory() + " tipo: " + dataReturn);
+}
+
+if(foundSymbol.getCategory().equals("arreglo")){
+dataReturn= foundSymbol.getDataType();
+System.out.println("Encontrado " + lexeme + " es " + foundSymbol.getCategory() + " tipo: " + dataReturn);
 }
 }
 else{
 System.out.println(lexeme + " no existe ");
 }
-} ExpressionPrime() {return dataReturn;}
-
-|<thisToken>ExpressionPrime() {return dataReturn;}
-|LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression() <closedBraceToken> ExpressionPrime() {return dataReturn;}
-| <newToken> <idToken><openedParenthesisToken> <closedParenthesisToken> ExpressionPrime() {return dataReturn;}
-|<notToken>Expression()ExpressionPrime() {return dataReturn;}
-|<openedParenthesisToken>Expression()<closedParenthesisToken>ExpressionPrime() {return dataReturn;}
+} nextDataType = ExpressionPrime(dataReturn) 
+{ 
+if (!dataReturn.equals(nextDataType)) 
+dataReturn=nextDataType;
+return dataReturn;
 }
 
-void ExpressionPrime():{}
+|<thisToken>ExpressionPrime(dataReturn) {return "noApply";}
+|LOOKAHEAD(2) <newToken><intToken><openedBraceToken> Expression(0,arrayName) <closedBraceToken> ExpressionPrime(dataReturn) {return dataReturn;}
+| <newToken> <idToken><openedParenthesisToken> <closedParenthesisToken> ExpressionPrime(dataReturn) {return dataReturn;}
+|<notToken>Expression(0, "")ExpressionPrime(dataReturn) {return dataReturn;}
+|<openedParenthesisToken>Expression(0, "")<closedParenthesisToken>ExpressionPrime(dataReturn) {return "noApply";}
+}
+
+
+
+
+String ExpressionPrime(String previousDataType):{String dataType=""; String dataReturn=previousDataType; char aritmeticOperator='n';}
 {
 (         
 (
 <andToken> | <orToken> | <lessThanToken> | <moreThanToken> |
-<lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> |
-<minusToken> | <multiplicationToken> | <divisionToken> | <comparationToken>
-)Expression() ExpressionPrime()
-| LOOKAHEAD(2)<openedBraceToken> Expression() <closedBraceToken> ExpressionPrime()
-|LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime()
-|LOOKAHEAD(2)<dotToken> <idToken><openedParenthesisToken> (Expression() (<commaToken> Expression())*)? <closedParenthesisToken> ExpressionPrime()
-)*
+<lessOrEqualThanToken> | <moreOrEqualThanToken> | <plusToken> {aritmeticOperator='+';} |
+<minusToken> {aritmeticOperator='-';} | <multiplicationToken> {aritmeticOperator='*';} | <divisionToken> {aritmeticOperator='/';} | <comparationToken>
+)dataType=Expression(0, "") 
+{
+if(previousDataType.equals(dataType)){
+dataReturn=previousDataType;
+}
+
+else if(!dataType.equals("noApply")){
+dataReturn="Error";
+}
+
+// Check if both values are numbers in aritmetic expressions
+if(aritmeticOperator!='n' && !dataType.equals("noApply")){
+ if((!previousDataType.equals("int") && !previousDataType.equals("float")) || (!dataType.equals("int") && !dataType.equals("float"))){
+	dataReturn="AritmeticError";		
+  }
+}
+
+//System.out.println("Tipo pasado " + previousDataType + " tipo sig " + dataType + " retorna " + dataReturn);
+}
+ExpressionPrime(dataReturn){return dataReturn;}
+
+|LOOKAHEAD(2)<openedBraceToken> Expression(0, "") <closedBraceToken> ExpressionPrime(dataReturn){return dataReturn;}
+|LOOKAHEAD(2) <dotToken> <lengthToken> ExpressionPrime(dataReturn){return previousDataType;}
+|LOOKAHEAD(2)<dotToken><idToken><openedParenthesisToken> (Expression(0, "") (<commaToken> Expression(0, ""))*)? <closedParenthesisToken> ExpressionPrime(dataReturn){return previousDataType;}
+)*{return dataReturn;}
 }
